@@ -1,0 +1,107 @@
+Laboratorios del modulo I
+
+Comandos usados practica 1
+
+#No utilizamos comandos#
+============================================
+
+Comandos usados practica 2
+
+ip a
+nmcli device status 
+sudo nmcli connection delete ens160
+nmcli device status 
+
+Conguracion DHCP:
+Sudo nmcli connection add type ethernet \
+con-name ens160 \
+ifname ens160 \
+ipv4.method auto \
+autoconnect yes, enter 
+nmcli device status 
+ip a 
+
+Agregar ip fija:
+Sudo nmcli connection add type ethernet \
+con-name ens160 \
+ifname ens160 \
+ipv4. addresses 192.168.100.16/24 \
+ipv4.gateway 192.168.100.1 \
+ipv4. dns "8.8.8.8 8.8.4.4" \
+ipv4.method manual \
+autoconnect yes 
+nmcli device status 
+sudo nmcli connection up ens160
+ip a
+
+Configurar parámetros de red mediante archivo nano:
+cd /etc/sysconfig/network-scripts
+nano ifctg-ens160
+
+Configuración para DHCP: 
+DEVICE =ens160
+BOOTPROTO =dhcp
+ONBOOT=yes 
+
+IP Fija: 
+DEVICE =ens160
+BOOTPROTO=none
+ONBOOT=yes
+IPADDR=192.168.100.16
+NETMASK= 255.255.255.0
+GATEWAY=192.168.100.1
+DNS1=8.8.8.8
+DNS2=8.8.4.4
+
+parámetro de red mediante interfaz grafica:
+sudo nmtui
+
+Parámetro de red temporal:
+sudo ip addr add 192.168.100.80 dev ens160
+============================================
+
+Comandos usados practica 3
+
+sudo useradd lisbeth
+sudo passwd lisbeth
+sudo usermod -aG wheel lisbeth
+groups lisbeth
+sudo groupadd guest
+sudo useradd pedro
+sudo passwd pedro
+sudo usermod -aG guest pedro
+groups pedro
+sudo userdel pedro
+sudo userdel -r pedro
+sudo groupdel guest
+
+============================================
+
+Comandos usados practica 4
+
+cd ~/Escritorio
+pwd
+mkdir materia
+ls
+cd materia
+pwd
+touch estudiante.txt
+ls
+vi estudiante.txt
+cat estudiante.txt
+ls -l estudiante.txt
+chmod 700 estudiante.txt
+ls -l estudiante.txt
+chmod 070 estudiante.txt
+ls -l estudiante.txt
+cd ..
+pwd
+mkdir materia2
+ls
+chmod 740 materia/estudiante.txt
+ls -l materia/estudiante.txt
+cp materia/estudiante.txt materia2/
+ls materia2
+rm -r materia
+ls
+============================================
