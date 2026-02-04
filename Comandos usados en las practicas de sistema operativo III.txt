@@ -1,7 +1,5 @@
 Comandos usados practica 1
 
-
-
 ============================================
 
 Comandos usados practica 2
@@ -13,5 +11,6 @@ Comandos usados practica 3
 ============================================
 
 Comandos usados practica 4
+
 
 ============================================
