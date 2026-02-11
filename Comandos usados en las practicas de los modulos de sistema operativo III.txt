@@ -105,3 +105,52 @@ ls materia2
 rm -r materia
 ls
 ============================================
+
+Laboratorios del modulo II
+
+============================================
+Comandos usados practica 1
+
+1. sudo dnf check-update
+2. sudo dnf upgrade -y
+3. sudo dnf repolist
+4. sudo dnf repolist all
+5. dnf search btop
+6. dnf info btop
+7. sudo dnf install epel-release -y
+8. sudo dnf install btop -y
+9. btop
+10. sudo dnf remove btop -y
+11. rm -rf ~/.config/btop
+12. sudo rm -rf /root/.config/btop
+13. sudo dnf autoremove -y
+============================================
+Comandos usados practica 2
+
+1. sudo crontab -e
+2. 0 23 * * * dnf upgrade -y
+3. sudo crontab -e
+4. 0 3 * * 0 reboot
+5. ls /tmp
+6. at now + 1 minute
+7. rm -rf /tmp/*
+8. Ctrl + D
+9. atq
+10. ls /tmp
+Si el comando at no está instalado
+1.sudo dnf install at -y
+2.sudo systemctl enable --now atd
+============================================
+Comandos usados practica 3
+
+1. lsblk
+2. fdisk /dev/nvme0n2
+3. mkfs.ext4 /dev/nvme0n2p1
+4. mkdir /home/lisbethsalvador/Desktop/NuevoDisco
+5. mount /dev/nvme0n2p1 /home/lisbethsalvador/Desktop/NuevoDisco
+6. cd /home/lisbethsalvador/Desktop/NuevoDisco
+7. touch AdrianAlcantara.txt
+8. ls
+9. umount /dev/nvme0n2p1
+10. mount /dev/nvme0n2p1 /mnt
+11. ls /mnt
