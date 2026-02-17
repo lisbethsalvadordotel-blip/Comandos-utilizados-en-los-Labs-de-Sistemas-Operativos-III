@@ -154,3 +154,63 @@ Comandos usados practica 3
 9. umount /dev/nvme0n2p1
 10. mount /dev/nvme0n2p1 /mnt
 11. ls /mnt
+
+============================================
+
+Laboratorios del modulo III
+
+============================================
+Comandos usados practica 1
+
+1. sudo nano /etc/default/grub
+2. sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+3. cat /etc/default/grub | grep GRUB_TIMEOUT
+4. sudo reboot
+5. rw init=/bin/bash
+6. mount -o remount,rw /
+7. passwd root
+8. touch /.autorelabel
+9. exec /sbin/init
+10. su
+
+============================================
+Comandos usados practica 2
+
+1. ip a
+2. ping -c 4 192.168.100.109
+3. sudo dnf install openssh-server -y
+4. sudo systemctl start sshd
+5. sudo systemctl enable sshd
+6. sudo systemctl status sshd
+7. ssh lissalvador@192.168.100.104
+8. exit
+9. ssh-keygen
+10. notepad C:\Users\lisbe\.ssh\id_ed25519.pub
+11. cd
+12. mkdir .ssh
+13. cd .ssh
+14. sudo nano authorized_keys
+
+============================================
+Comandos usados practica 3
+
+1. sudo nano backup_home.sh
+2. date +"%d-%m-%Y:%H:%M"
+3. tar -cvzf /home/$(whoami)/backup_home_$FECHA.tar.gz /home/$(whoami)
+4. echo "El archivo se ha creado correctamente"
+5. chmod +x backup_home.sh
+6. ./backup_home.sh
+7. cd /home/lissalvador
+8. ls -l
+9. sudo nano ifconfig.sh
+10. read -p "Ingrese el nombre que desea ponerle al archivo: " nombre
+11. ifconfig > /home/$(whoami)/Desktop/"$nombre".txt
+12. echo "El archivo se ha creado y guardado correctamente en el escritorio con nombre: $nombre.txt"
+13. sudo chmod +x ifconfig.sh
+14. ./ifconfig.sh
+15. cd /home/lissalvador/Desktop
+16. ls -l
+17. cat pruebaif.txt
+18. cd /home/lissalvador/
+
+
