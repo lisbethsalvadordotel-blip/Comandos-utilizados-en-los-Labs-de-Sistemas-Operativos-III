@@ -287,6 +287,18 @@ mail -s "MambruSeFueALaGuerra"  uncorreo@gmail.com < mensaje.txt
 ============================================
 Comandos usados practica 3
 
-
-
+sudo dnf update -y
+sudo dnf install cups -y
+sudo systemctl start cups
+sudo systemctl enable cups
+sudo systemctl status cups
+sudo nano /etc/cups/cupsd.conf
+sudo systemctl restart cups
+sudo firewall-cmd --add-service=ipp --permanent
+sudo firewall-cmd --reload
+sudo firewall-cmd --list-all
+ip a
+sudo dnf install cups-pdf -y
+sudo systemctl restart cups
+cupsctl --remote-admin --remote-any --share-printers
 
