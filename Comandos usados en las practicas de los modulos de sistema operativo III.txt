@@ -213,4 +213,80 @@ Comandos usados practica 3
 17. cat pruebaif.txt
 18. cd /home/lissalvador/
 
+Laboratorios del modulo IV
+
+Comandos usados practica 1
+============================================
+dnf update -y
+dnf install httpd -y
+sudo systemctl start httpd
+systemctl enable httpd
+systemctl status httpd
+
+cd /var/www/html
+mkdir Hola
+cd Hola
+nano index.html
+
+nano /etc/httpd/conf/httpd.conf
+systemctl restart httpd
+nano /etc/hosts
+
+cd
+clear
+cd /var/www/html
+mkdir Estudiante
+cd Estudiante
+nano index.html
+
+sudo nano /etc/httpd/conf/httpd.conf
+nano /etc/hosts
+systemctl restart httpd
+
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --permanent --add-port=8080/tcp
+sudo firewall-cmd --reload
+
+ss -tulnp | grep httpd
+
+URLs probadas en navegador:
+http://hola.localhost
+http://Estudiante.localhost:8080
+http://localhost:8080
+http://192.168.100.104:8080
+
+============================================
+Comandos usados practica 2
+
+sudo -i
+dnf install postfix -y
+dnf install mailx -y
+
+systemctl start postfix
+systemctl enable postfix
+systemctl status postfix
+
+firewall-cmd --permanent --add-port=25/tcp
+firewall-cmd --permanent --add-port=465/tcp
+firewall-cmd --permanent --add-port=587/tcp
+firewall-cmd --reload
+
+nano /etc/postfix/main.cf
+nano /etc/postfix/sasl_passwd
+
+chmod 600 /etc/postfix/sasl_passwd
+postmap /etc/postfix/sasl_passwd
+
+systemctl restart postfix
+
+nano mensaje.txt
+
+mail -s "MambruSeFueALaGuerra" tucorreo@gmail.com < mensaje.txt
+mail -s "MambruSeFueALaGuerra"  uncorreo@gmail.com < mensaje.txt
+
+============================================
+Comandos usados practica 3
+
+
+
 
