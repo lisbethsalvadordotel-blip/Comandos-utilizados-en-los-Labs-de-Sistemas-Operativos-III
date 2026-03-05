@@ -460,4 +460,46 @@ Esperar 1 minuto y verificar en el servidor secundario:
 
 ls
 
+============================================
+Comandos usados practica 2
+============================================
+sudo dnf install -y epel-release
+sudo dnf config-manager --set-enabled highavailability
+sudo dnf config-manager --enable highavailability
+
+sudo dnf install -y pacemaker pcs
+
+sudo systemctl enable pcsd
+sudo systemctl start pcsd
+
+sudo passwd hacluster
+
+sudo firewall-cmd --permanent --add-service=high-availability
+sudo firewall-cmd --reload
+
+sudo pcs cluster auth 192.168.100.104 192.168.100.16 -u hacluster
+
+sudo pcs cluster setup cluster-lissalvador 192.168.100.104 192.168.100.16
+
+sudo pcs cluster enable --all
+sudo pcs cluster start --all
+
+sudo pcs status
+
+sudo pcs property set stonith-enabled=false
+sudo pcs property set no-quorum-policy=ignore
+
+sudo pcs resource create IP_Flotante ocf:heartbeat:IPaddr2 ip=192.168.100.200 cidr_netmask=24 op monitor interval=30s
+
+sudo pcs resource status
+sudo pcs node status
+
+
+
+
+
+
+
+
+
 
