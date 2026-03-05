@@ -494,6 +494,156 @@ sudo pcs resource create IP_Flotante ocf:heartbeat:IPaddr2 ip=192.168.100.200 ci
 sudo pcs resource status
 sudo pcs node status
 
+============================================
+Comandos usados practica 3
+========================================
+PRACTICA 3 - CLUSTER DE ALTA DISPONIBILIDAD HTTP
+Sistemas Operativos III - Modulo V
+========================================
+
+INSTALACION Y CONFIGURACION DE SERVIDORES WEB EN ALTA DISPONIBILIDAD
+
+En esta práctica utilizaremos dos servidores Rocky Linux.  
+En ambos servidores instalaremos Apache para crear un servicio web y luego
+configuraremos alta disponibilidad utilizando Keepalived y una IP flotante.
+
+========================================
+1. INSTALAR APACHE (EN AMBOS SERVIDORES)
+========================================
+
+sudo dnf install httpd -y
+
+========================================
+2. CREAR PAGINA WEB EN CADA SERVIDOR
+========================================
+
+En el servidor principal creamos una página que identifique el servidor.
+
+echo "<h1>Servidor 1 - IP:192.168.100.16</h1>" | sudo tee /var/www/html/index.html
+
+En el servidor secundario creamos otra página con su identificación.
+
+echo "<h1>Servidor 2 - IP:192.168.100.104</h1>" | sudo tee /var/www/html/index.html
+
+========================================
+3. ASIGNAR PERMISOS AL ARCHIVO
+========================================
+
+En ambos servidores asignamos el propietario del archivo.
+
+sudo chown lissalvador:lissalvador /var/www/html/index.html
+
+========================================
+4. PERMITIR HTTP EN EL FIREWALL
+========================================
+
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --reload
+
+========================================
+5. INICIAR Y HABILITAR APACHE
+========================================
+
+sudo systemctl enable httpd
+sudo systemctl start httpd
+sudo systemctl status httpd
+
+========================================
+6. INSTALAR KEEPALIVED
+========================================
+
+sudo dnf install keepalived -y
+
+========================================
+7. CONFIGURAR KEEPALIVED
+========================================
+
+En ambos servidores eliminamos el archivo de configuración predeterminado.
+
+sudo rm /etc/keepalived/keepalived.conf
+
+Luego creamos un nuevo archivo de configuración.
+
+sudo nano /etc/keepalived/keepalived.conf
+
+========================================
+CONFIGURACION DEL SERVIDOR 1 (MASTER)
+========================================
+
+vrrp_instance VI_1 {
+
+    state MASTER
+    interface ens160
+    virtual_router_id 51
+    priority 99
+    advert_int 1
+
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+
+    virtual_ipaddress {
+        192.168.100.200
+    }
+
+}
+
+========================================
+CONFIGURACION DEL SERVIDOR 2 (BACKUP)
+========================================
+
+vrrp_instance VI_1 {
+
+    state BACKUP
+    interface ens160
+    virtual_router_id 51
+    priority 30
+    advert_int 1
+
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+
+    virtual_ipaddress {
+        192.168.100.200
+    }
+
+}
+
+========================================
+8. INICIAR Y HABILITAR KEEPALIVED
+========================================
+
+sudo systemctl enable keepalived
+sudo systemctl start keepalived
+sudo systemctl status keepalived
+
+========================================
+9. REINICIAR EL SERVICIO APACHE
+========================================
+
+sudo systemctl restart httpd
+sudo systemctl status httpd
+
+========================================
+10. PRUEBA DE ALTA DISPONIBILIDAD
+========================================
+
+Desde nuestra máquina host abrimos un navegador y accedemos a la IP flotante
+para verificar qué servidor está activo.
+
+Luego realizamos un ping permanente a la IP virtual:
+
+ping -t 192.168.100.200
+
+Mientras el ping está activo reiniciamos el servidor MASTER:
+
+reboot
+
+Si el ping no se pierde y el navegador muestra la página del servidor BACKUP,
+significa que la alta disponibilidad está funcionando correctamente.
 
 
 
