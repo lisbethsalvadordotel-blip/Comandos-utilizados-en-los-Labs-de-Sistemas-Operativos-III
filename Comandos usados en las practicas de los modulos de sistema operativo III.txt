@@ -646,6 +646,101 @@ Si el ping no se pierde y el navegador muestra la página del servidor BACKUP,
 significa que la alta disponibilidad está funcionando correctamente.
 
 
+Practica 1 Modulo 6
+
+Comandos utilizados, práctica laboratorio 6.1: Seguridad en Linux.
+
+CIFRADO GPG.
+
+=============================================
+
+#Instalación de la herramienta GPG2:
+sudo dnf install gnupg2 -y
+
+#Verificar que si se instaló
+gpg --version
+
+#Nos ubicamos en el escritorio para crear un nuevo archivo de texto, el
+que vamos a cifrar posteriormente:
+cd ./Desktop
+echo "Lisbeth 2025-0736" > Prueba.txt
+
+#Verificamos la existencia del archivo:
+ls -l
+cat archivo.txt
+
+# Ciframos el archivo 'archivo' de forma simétrica usando GPG2 (El
+sistema pedirá una contraseña para cifrar. Se debe escribir dos veces.
+Esto generará un nuevo archivo: 'archivo.txt.gpg')
+gpg -c Prueba.txt
+
+# Verificamos que el archivo cifrado fue creado correctamente (Aquí
+veremos tanto el archivo original como el cifrado: 'archivo.txt' y
+'archivo.txt.gpg')
+ls
+
+# Intentamos leer el archivo cifrado con 'cat' (no será legible para
+humanos)
+cat Prueba.txt.gpg
+
+# Intentamos descifrar el archivo de forma parcial
+gpg -d Prueba.txt.gpg
+
+# Intentamos descifrar el archivo de forma permanente
+sudo gpg -d Prueba.txt.gpg > Prueba.txt
+
+# Para ver el contenido
+ls -l
+
+
+Comandos utilizados, práctica laboratorio 6.1: Seguridad en Linux
+
+CIFRADO CON GPG
+
+=============================================
+
+# Instalación de la herramienta GPG:
+sudo dnf install gnupg2 -y
+
+# Verificar que la herramienta fue instalada correctamente:
+gpg --version
+
+# Nos ubicamos en el escritorio para crear un archivo de texto
+# que posteriormente será cifrado:
+cd ~/Desktop
+
+# Creamos el archivo:
+echo "Lisbeth 2025-0736" > Prueba.txt
+
+# Verificamos que el archivo exista y mostramos su contenido:
+ls -l
+cat Prueba.txt
+
+# Ciframos el archivo de forma simétrica con GPG.
+# El sistema solicitará una contraseña dos veces.
+# Esto generará un nuevo archivo llamado: Prueba.txt.gpg
+gpg -c Prueba.txt
+
+# Verificamos que el archivo cifrado fue creado correctamente:
+ls -l
+
+# Intentamos leer el archivo cifrado con cat.
+# El contenido no será legible porque está cifrado.
+cat Prueba.txt.gpg
+
+# Desciframos el archivo y mostramos el contenido en pantalla:
+gpg -d Prueba.txt.gpg
+
+# Desciframos el archivo y guardamos el contenido en un nuevo archivo:
+gpg -o Prueba_descifrado.txt -d Prueba.txt.gpg
+
+# Verificamos que el archivo descifrado fue creado:
+ls -l
+
+# Mostramos el contenido del archivo descifrado:
+cat Prueba_descifrado.txt
+
+
 
 
 
