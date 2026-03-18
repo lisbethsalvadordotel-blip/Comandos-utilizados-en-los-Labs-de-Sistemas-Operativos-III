@@ -1,0 +1,70 @@
+CLI Laboratorio 2 modulo 7
+
+Comandos utilizados, práctica laboratorio 7.2:
+Controlador de Dominios y Compartir Archivos.
+
+Creación de Fileserver compatible con Windows utilizando SAMBA
+
+==================================================
+
+#En nuestro servidor Rocky, instalamos SAMBA y herramientas necesarias:
+
+sudo dnf install samba samba-client samba-common -y
+
+#Habilitamos e iniciamos los servicios SMB y NMB:
+
+sudo systemctl enable --now smb nmb
+
+#Creamos la carpeta compartida y asignamos permisos para que todos puedan acceder a los archivos. Luego, creamos los archivos a compartir:
+
+sudo mkdir -p /srv/samba/public
+sudo chcon -t samba_share_t /srv/samba/public
+cd /srv/samba/public
+sudo touch Adrian{1..100}.txt
+sudo chmod -R 777 /srv/samba/public
+sudo chown -R nobody:nobody /srv/samba/public
+
+ls -l
+
+#Configuramos el Firewall para SAMBA:
+
+sudo systemctl enable --now smb nmb
+
+sudo firewall-cmd --add-service=samba --permanent
+sudo firewall-cmd --reload
+
+#Editamos el archivo de configuración de SAMBA, agregamos el contenido posterior al signo ">", adaptándolo a nuestro archivo compartido:
+
+sudo nano /etc/samba/smb.conf
+
+[public]
+    path = /srv/samba/public
+    browsable = yes
+    writable = yes
+    guest ok = yes
+    read only = no
+    force user = nobody
+
+#Luego, creamos los grupos y usuarios para SAMBA, asignando la contraseña:
+
+sudo groupadd sambausers
+sudo useradd -M -s /sbin/nologin Lisbeth
+sudo smbpasswd -a Lisbeth
+passw:lisdotel20
+sudo usermod -aG sambausers Lisbeth
+
+#Reiniciamos los servicios de SAMBA:
+
+sudo systemctl restart smb nmb
+
+#Luego, vamos al cliente Windows. Para conectar la carpeta compartida como unidad de red, nos dirigimos...
+
+File explorer > This PC > Map network drive...
+
+#Escribimos:
+
+\\<IP_DEL_SERVIDOR>\public
+
+#Marcamos la casilla "Connect using different credentials" y clicamos en finalizar (Colocaremos las credenciales creadas en el servidor).
+
+
