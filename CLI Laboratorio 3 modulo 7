@@ -1,0 +1,192 @@
+CLI Laboratorio 3 modulo 7
+
+#Configurar el nombre del host del servidor
+hostnamectl set-hostname SO3.inet
+
+#A través de nmtui nos aseguramos de que nuestra IP es estática y 
+está configurada en los DNS servers. Agregamos el nombre SO3.inet a search Domains
+Hostname
+
+nano /etc/hosts
+>192.168.100.16 SO3-DOM  SO3.inet inet
+
+#Reiniciar tarjeta de red
+sudo nmcli device disconnect ens160
+sudo nmcli device connect ens160
+
+ip a
+
+sudo nano /etc/resolv.conf
+
+#Renombrar archivos de configuración antiguos para copia de seguridad:
+sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.backup
+sudo mv /etc/krb5.conf /etc/krb5.conf.backup
+
+#Descargar el paquete de samba desde el sitio web oficial:
+
+sudo wget https://download.samba.org/pub/samba/stable/samba-4.16.2.tar.gz
+sudo mkdir -p /samba
+sudo mv samba-4.16.2.tar.gz /samba/
+cd /samba/
+ls
+sudo tar -zxf samba-4.16.2.tar.gz samba-4.16.2/
+sudo cd samba-4.16.2/
+
+sudo dnf -y install epel-release
+sudo dnf config-manager --set-enabled crb
+sudo dnf -y update
+
+#Descargar el paquete de samba desde el sitio web oficial:
+
+wget https://download.samba.org/pub/samba/stable/samba-4.16.2.tar.gz
+sudo mkdir -p /samba
+sudo mv samba-4.16.2.tar.gz /samba/
+cd /samba/
+ls
+
+sudo tar -zxf samba-4.16.2.tar.gz samba-4.16.2/
+cd samba-4.16.2/
+
+sudo dnf -y install epel-release
+sudo dnf config-manager --set-enabled crb
+dnf -y update
+
+sudo dnf -y install \
+docbook-style-xsl \
+python3-markdown \
+bison \
+dbus-devel \
+flex \
+gcc \
+gdbm-devel \
+gnutls-devel \
+jansson-devel \
+keyutils-libs-devel \
+krb5-workstation \
+libacl-devel \
+libaio-devel \
+libarchive-devel \
+libattr-devel \
+libblkid-devel \
+libtasn1 \
+libtasn1-tools \
+libxml2-devel \
+libxslt \
+libtool-ltdl-devel \
+openldap-devel \
+pam-devel \
+perl-ExtUtils-MakeMaker \
+perl-Parse-Yapp \
+popt-devel \
+python3-cryptography \
+python3-dns \
+python3-gpg \
+python3-devel \
+readline-devel \
+rpcgen \
+systemd-devel \
+tar \
+zlib-devel \
+perl-JSON \
+gpgme-devel \
+screen
+
+
+sudo dnf -y update
+sudo ./configure
+sudo make -j 2 (Si sale error colocar: sudo dnf install perl-FindBin)
+sudo make -j 2 install
+
+export PATH=/usr/local/samba/bin/:/usr/local/samba/sbin/:$PATH
+
+#Agregar el path a los perfiles de usuario y root:
+sudo nano ~/.bash_profile
+sudo nano ../.bash_profile
+
+> PATH=$PATH:$HOME/bin/:/usr/local/samba/bin/:/usr/local/samba/sbin/:$PATH export PATH
+
+#Provisión del dominio:
+
+
+sudo /usr/local/samba/bin/samba-tool domain provision --use-rfc2307 --
+interactive --option="interfaces=lo ens160" --option="bind interfaces only=yes"
+
+>
+
+Realm [INET]: SO3.inet
+Domain [SO3]: SO3-DOM
+Server Role (dc, member, standalone) [dc]: dc
+DNS backend (SAMBA_INTERNAL, BIND9_FLATFILE, BIND9_DLZ, NONE) [SAMBA_INTERNAL]: SAMBA_INTERNAL
+DNS forwarder IP address (write 'none' to disable forwarding) [8.8.8.8]: Enter
+Administrator password: Lis!!20250736
+Retype password: Lis!!20250736
+
+
+
+sudo nano /etc/resolv.conf
+> nameserver fe80::1%ens160
+
+search SO3.inet inet
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+nameserver 192.168.100.16
+nameserver fe80::1%ens160
+
+
+
+sudo /usr/local/samba/sbin/samba
+
+ping www.google.com
+
+sudo cp /usr/local/samba/private/krb5.conf /etc/krb5.conf
+
+host -t SRV _ldap._tcp SO3.inet
+host -t SRV _kerberos._udp SO3.inet
+
+ping SO3.inet
+
+sudo systemctl stop firewalld
+
+sudo dnf -y install iptables-services
+
+systemctl start iptables
+systemctl enable iptables
+systemctl status iptables
+
+#Justo debajo de las reglas de aceptación de iptables, agrega estas líneas en el archivo de configuración:
+
+sudo nano /etc/sysconfig/iptables
+
+-A INPUT -p tcp -s 192.168.100.0/24 -m state --state NEW -m multiport --dports 53,88,135,139,389,445,464,636,3268,49152:65535 -j ACCEPT
+
+-A INPUT -p dp -s 192.168.100.0/24 -m state --state NEW -m multiport --dports 53,123,137,138,389,636 -j ACCEPT
+ 
+(Verificar que no halla Ningún salto)
+
+sudo systemctl restart iptables
+sudo systemctl status iptables
+
+sudo /usr/local/samba/bin/samba-tool user create lanegracubana "Lis20250736" 
+--given-name="La Negra" --surname="Cubana" --mail=lanegracubana@so3.inet
+
+samba-tool dns add 192.168.100.16 SO3.inet www A 192.168.100.20 -U Administrator
+
+#Cliente Windows:
+
+Control Panel > Network and Internet > Network and Sharing Center > Change adapter settings 
+> (Clic derecho en la conexión activa) Properties > Internet Protocol Version 4 (TCP/IPv4) 
+> Properties > Use the following DNS server addresses.
+
+#En Preferred DNS server, escribe la IP del servidor Samba. Opción alternativa:
+Google DNS 8.8.8.8 (opcional).
+
+ping so3.inet
+
+Settings > About your PC > Advanced system settings > computer name > change > Domain > "SO3.inet"
+
+#Agregar permiso administrativo al usuario:
+
+sudo env LD_LIBRARY_PATH=/usr/local/samba/lib/private:/usr/local/samba/lib:/usr/local/samba/lib64 /usr/local/samba/bin/samba-tool group addmembers "Domain Admins" lanegracubana
+
+para verificar:
+sudo env LD_LIBRARY_PATH=/usr/local/samba/lib/private:/usr/local/samba/lib:/usr/local/samba/lib64 /usr/local/samba/bin/samba-tool group listmembers "Domain Admins"
